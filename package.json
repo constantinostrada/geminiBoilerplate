@@ -1,15 +1,33 @@
 {
-  "name": "geminiBoiler",
+  "name": "geminiboiler",
   "version": "1.0.0",
   "description": "A basic HTML, CSS, and JavaScript boilerplate",
+  "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "start": "open index.html",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --runInBand --forceExit",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "jsonwebtoken": "^9.0.0",
+    "uuid": "^9.0.0"
+  },
   "devDependencies": {
     "eslint": "^8.0.0",
-    "prettier": "^2.0.0"
+    "jest": "^29.0.0",
+    "nodemon": "^3.0.0",
+    "prettier": "^2.0.0",
+    "supertest": "^6.3.0"
   },
   "license": "MIT"
 }
