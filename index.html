@@ -1,13 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>geminiBoiler</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directorio de Empleados</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to geminiBoiler!</h1>
-    <script src="script.js"></script>
+
+  <!-- ───────────────────────── APP SHELL ───────────────────────── -->
+  <div class="app">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="app-header__brand">
+        <svg class="app-header__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>Directorio de Empleados</span>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="app-main">
+
+      <!-- ══════════════ VIEW: TABLE ══════════════ -->
+      <section id="view-list" class="view view--active">
+        <div class="view__toolbar">
+          <div class="search-box">
+            <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input
+              id="search-input"
+              class="search-box__input"
+              type="search"
+              placeholder="Buscar por nombre…"
+              aria-label="Buscar empleado por nombre"
+            >
+          </div>
+          <button id="btn-new-employee" class="btn btn--primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Nuevo Empleado
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="employee-table" aria-label="Listado de empleados">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Departamento</th>
+                <th>Estado</th>
+                <th class="col-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="employee-tbody">
+              <!-- Rows injected by JS -->
+            </tbody>
+          </table>
+          <div id="empty-state" class="empty-state hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <p>No se encontraron empleados</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ VIEW: DETAIL ══════════════ -->
+      <section id="view-detail" class="view">
+        <button id="btn-back-detail" class="btn btn--ghost btn--back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Volver al listado
+        </button>
+
+        <div class="detail-card" id="detail-card">
+          <div class="detail-card__header">
+            <div class="avatar" id="detail-avatar"></div>
+            <div>
+              <h2 id="detail-name" class="detail-card__name"></h2>
+              <p id="detail-role" class="detail-card__role"></p>
+              <span id="detail-status-badge" class="badge"></span>
+            </div>
+            <div class="detail-card__actions">
+              <button id="btn-edit-detail" class="btn btn--secondary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Editar
+              </button>
+              <button id="btn-delete-detail" class="btn btn--danger">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+                Eliminar
+              </button>
+            </div>
+          </div>
+
+          <dl class="detail-grid">
+            <div class="detail-grid__item">
+              <dt>Email</dt>
+              <dd id="detail-email"></dd>
+            </div>
+            <div class="detail-grid__item">
+              <dt>Teléfono</dt>
+              <dd id="detail-phone"></dd>
+            </div>
+            <div class="detail-grid__item">
+              <dt>Departamento</dt>
+              <dd id="detail-department"></dd>
+            </div>
+            <div class="detail-grid__item">
+              <dt>Cargo</dt>
+              <dd id="detail-position"></dd>
+            </div>
+            <div class="detail-grid__item">
+              <dt>Fecha de ingreso</dt>
+              <dd id="detail-start-date"></dd>
+            </div>
+            <div class="detail-grid__item">
+              <dt>Ubicación</dt>
+              <dd id="detail-location"></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ══════════════ VIEW: FORM ══════════════ -->
+      <section id="view-form" class="view">
+        <button id="btn-back-form" class="btn btn--ghost btn--back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Volver al listado
+        </button>
+
+        <div class="form-card">
+          <h2 id="form-title" class="form-card__title">Nuevo Empleado</h2>
+
+          <form id="employee-form" novalidate>
+            <input type="hidden" id="field-id">
+
+            <div class="form-grid">
+              <!-- Full name -->
+              <div class="form-group form-group--full">
+                <label class="form-label" for="field-name">
+                  Nombre completo <span class="required">*</span>
+                </label>
+                <input
+                  id="field-name"
+                  class="form-control"
+                  type="text"
+                  placeholder="Ej. Ana García López"
+                  maxlength="80"
+                  required
+                >
+                <span class="form-error" id="err-name"></span>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label class="form-label" for="field-email">
+                  Email <span class="required">*</span>
+                </label>
+                <input
+                  id="field-email"
+                  class="form-control"
+                  type="email"
+                  placeholder="correo@empresa.com"
+                  required
+                >
+                <span class="form-error" id="err-email"></span>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label class="form-label" for="field-phone">Teléfono</label>
+                <input
+                  id="field-phone"
+                  class="form-control"
+                  type="tel"
+                  placeholder="+52 55 1234 5678"
+                >
+              </div>
+
+              <!-- Position -->
+              <div class="form-group">
+                <label class="form-label" for="field-position">
+                  Cargo <span class="required">*</span>
+                </label>
+                <input
+                  id="field-position"
+                  class="form-control"
+                  type="text"
+                  placeholder="Ej. Desarrollador Senior"
+                  required
+                >
+                <span class="form-error" id="err-position"></span>
+              </div>
+
+              <!-- Department -->
+              <div class="form-group">
+                <label class="form-label" for="field-department">
+                  Departamento <span class="required">*</span>
+                </label>
+                <select id="field-department" class="form-control form-control--select" required>
+                  <option value="">Seleccionar…</option>
+                  <option value="Ingeniería">Ingeniería</option>
+                  <option value="Diseño">Diseño</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Ventas">Ventas</option>
+                  <option value="Recursos Humanos">Recursos Humanos</option>
+                  <option value="Finanzas">Finanzas</option>
+                  <option value="Operaciones">Operaciones</option>
+                </select>
+                <span class="form-error" id="err-department"></span>
+              </div>
+
+              <!-- Start date -->
+              <div class="form-group">
+                <label class="form-label" for="field-start-date">Fecha de ingreso</label>
+                <input id="field-start-date" class="form-control" type="date">
+              </div>
+
+              <!-- Location -->
+              <div class="form-group">
+                <label class="form-label" for="field-location">Ubicación</label>
+                <input
+                  id="field-location"
+                  class="form-control"
+                  type="text"
+                  placeholder="Ej. Ciudad de México"
+                >
+              </div>
+
+              <!-- Status -->
+              <div class="form-group form-group--full">
+                <label class="form-label">Estado</label>
+                <div class="toggle-group">
+                  <label class="toggle">
+                    <input id="field-status" type="checkbox" checked>
+                    <span class="toggle__track"></span>
+                    <span class="toggle__label" id="toggle-label">Activo</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="btn-cancel-form" class="btn btn--ghost">Cancelar</button>
+              <button type="submit" id="btn-submit-form" class="btn btn--primary">Guardar empleado</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ══════════════ MODAL: CONFIRM DELETE ══════════════ -->
+  <div id="modal-confirm" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal">
+      <div class="modal__icon modal__icon--danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </div>
+      <h3 id="modal-title" class="modal__title">Eliminar empleado</h3>
+      <p id="modal-message" class="modal__message"></p>
+      <div class="modal__actions">
+        <button id="btn-cancel-delete" class="btn btn--ghost">Cancelar</button>
+        <button id="btn-confirm-delete" class="btn btn--danger">Sí, eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TOAST ══════════════ -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
