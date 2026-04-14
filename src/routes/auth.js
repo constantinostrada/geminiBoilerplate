@@ -1,0 +1,44 @@
+import { Router } from 'express'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { config } from '../config.js'
+import { adminUser } from '../db/seed.js'
+import { addToBlacklist } from '../db/tokenBlacklist.js'
+import { authenticate } from '../middleware/authenticate.js'
+
+const router = Router()
+
+router.post('/login', (req, res) => {
+  const { username, password } = req.body
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'username and password are required' })
+  }
+
+  if (username !== adminUser.username) {
+    return res.status(401).json({ error: 'Invalid credentials' })
+  }
+
+  const valid = bcrypt.compareSync(password, adminUser.password)
+  if (!valid) {
+    return res.status(401).json({ error: 'Invalid credentials' })
+  }
+
+  const token = jwt.sign(
+    { id: adminUser.id, username: adminUser.username },
+    config.jwtSecret,
+    { expiresIn: config.jwtExpiresIn }
+  )
+
+  return res.status(200).json({ token })
+})
+
+router.post('/logout', authenticate, (req, res) => {
+  const token = req.headers['authorization'].slice(7)
+  const decoded = jwt.decode(token)
+  const expiresAt = decoded.exp ? decoded.exp * 1000 : Date.now() + 3600 * 1000
+  addToBlacklist(token, expiresAt)
+  return res.status(200).json({ message: 'Logged out successfully' })
+})
+
+export default router
