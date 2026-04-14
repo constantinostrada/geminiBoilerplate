@@ -1,13 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>geminiBoiler</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>Welcome to geminiBoiler!</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gaston</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1 class="hero__title">Gaston</h1>
+      <p class="hero__subtitle">No one's slick as Gaston, no one's quick as Gaston!</p>
+    </header>
+
+    <main>
+      <section class="stats">
+        <h2 class="stats__heading">Just How Great Is Gaston?</h2>
+        <div class="stats__grid" id="statsGrid">
+          <!-- Cards injected by script.js -->
+        </div>
+      </section>
+
+      <section class="counter">
+        <h2 class="counter__heading">Eggs Eaten for Breakfast</h2>
+        <p class="counter__description">Every morning Gaston eats five dozen eggs. How many has he had today?</p>
+        <div class="counter__display">
+          <button class="counter__btn counter__btn--minus" id="btnMinus" aria-label="Remove eggs">−</button>
+          <span class="counter__value" id="eggCount">0</span>
+          <button class="counter__btn counter__btn--plus" id="btnPlus" aria-label="Add eggs">+</button>
+        </div>
+        <p class="counter__goal" id="eggGoal"></p>
+      </section>
+
+      <section class="quote">
+        <h2 class="quote__heading">Words of Wisdom from Gaston</h2>
+        <blockquote class="quote__block" id="quoteBlock">
+          <p class="quote__text" id="quoteText"></p>
+        </blockquote>
+        <button class="quote__btn" id="newQuoteBtn">New Quote</button>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Every last inch of me's covered in hair &mdash; <span id="year"></span></p>
+    </footer>
+
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
