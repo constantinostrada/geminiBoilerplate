@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Welcome to geminiBoiler!</h1>
+
+    <section class="counter" aria-label="Interactive counter">
+      <p class="counter__value" id="counter-value" aria-live="polite" aria-atomic="true">0</p>
+      <div class="counter__controls">
+        <button class="counter__btn counter__btn--decrement" id="btn-decrement" aria-label="Decrement">−</button>
+        <button class="counter__btn counter__btn--reset"     id="btn-reset"     aria-label="Reset">Reset</button>
+        <button class="counter__btn counter__btn--increment" id="btn-increment" aria-label="Increment">+</button>
+      </div>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>
